@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: VPC
+
+Parameters:
+  VpcCidrBlock:
+    Description: "Input VPC CIDR Block"
+    Type: String
+    Defaule: "10.100.0.0/22"
+  EcsSubnetAzACidrBlock:
+    Description: "Input ECS AzA subnet CIDR Block"
+    Type: String
+    Defaule: "10.100.0.0/24"
+  EcsSubnetAzCCidrBlock:
+    Description: "Input ECS AzC subnet CIDR Block"
+    Type: String
+    Defaule: "10.100.1.0/24"
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidrBlock
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: "sample-vpc"
+
+  EcsAzASubent:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 0
+        - Fn::GetAtt: !Ref AWS::Region
+      VpcId: !Ref VPC
+      CidrBlock: !Ref EcsSubnetAzACidrBlock
+      Tags:
+        - Key: Name
+          Value: "sample-ecs-subnet-1a"
+
+  EcsAzCSubent:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 1
+        - Fn::GetAtt: !Ref AWS::Region
+      VpcId: !Ref VPC
+      CidrBlock: !Ref EcsSubnetAzCCidrBlock
+      Tags:
+        - Key: Name
+          Value: "sample-ecs-subnet-1c"
+
+Outputs:
+  VpcId:
+    Value: !Ref VPC
+    Export:
+      Name: VpcId
+
+  EcsAzASubentId:
+    Value: !Ref EcsAzASubent
+    Export:
+      Name: EcsAzASubentId
+
+  EcsAzCSubentId:
+    Value: !Ref EcsAzCSubent
+    Export:
+      Name: EcsAzCSubentId
