@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "ECR"
+
+Resources:
+  ECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: test-app-repository
+
+Outputs:
+  ECR:
+    Value: !Ref ECR
+    Export:
+      Name: ECR
