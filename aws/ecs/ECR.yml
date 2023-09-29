@@ -8,7 +8,7 @@ Resources:
       RepositoryName: test-app-repository
 
 Outputs:
-  ECR:
-    Value: !Ref ECR
+  RpositoryUri:
+    Value: !GetAtt ECR.RpositoryUri
     Export:
-      Name: ECR
+      Name: RpositoryUri
