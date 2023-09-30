@@ -61,6 +61,30 @@ Resources:
         - Key: Name
           Value: "sample-ecs-subnet-1c"
 
+  AlbAzASubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 0
+        - Fn::GetAtt: !Ref AWS::Region
+      VpcId: !Ref VPC
+      CidrBlock: !Ref AlbSubnetAzACidrBlock
+      Tags:
+        - Key: Name
+          Value: "sample-alb-subnet-1a"
+
+  AlbAzCSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 1
+        - Fn::GetAtt: !Ref AWS::Region
+      VpcId: !Ref VPC
+      CidrBlock: !Ref AlbSubnetAzCCidrBlock
+      Tags:
+        - Key: Name
+          Value: "sample-alb-subnet-1c"
+
 Outputs:
   VpcId:
     Value: !Ref VPC
@@ -76,3 +100,13 @@ Outputs:
     Value: !Ref EcsAzCSubent
     Export:
       Name: EcsAzCSubentId
+
+  AlbAzASubnetId:
+    Value: !Ref AlbAzASubnet
+    Export:
+      Name: AlbAzASubnetId
+
+  AlbAzCSubnetId:
+    Value: !Ref AlbAzCSubnet
+    Export:
+      Name: AlbAzASubnAlbAzCSubnetIdetId
