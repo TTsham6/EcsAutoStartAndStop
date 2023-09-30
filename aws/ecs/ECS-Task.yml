@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "ECS"
+
+Parameters:
+  ImageTag:
+    Description: "Input container image tag"
+    Type: String
+    Default: "latest"
+
+Resources:
+  ########################################################
+  ### ECS Cluster
+  ########################################################
+  EcsCluster:
+    Type: "AWS::ECS::Cluster"
+    Properties:
+      ClusterName: "test-app-claster"
+
+  ########################################################
+  ### ECS Task Definition
+  ########################################################
+  EcsTaskDefinition:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      Cpu: 256
+      ExecutionRoleArn: !Ref TastRole
+      Family: "test-ecs-task"
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ContainerDefinitions:
+        - Name: "ecs-container"
+          Image: !Sub
+            - "${RepositoryUri}:${ImageTag}"
+            - RepositoryUri: !ImportValue RepositoryUri
+          MemoryReservation: 128
+          PortMappings:
+            - HostPort: 80
+              Protocol: tcp
+              ContainerPort: 80
+
+  ########################################################
+  ### Task IAM Role
+  ########################################################
+  TastRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "ecs-container-role"
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+Outputs:
+  EcsCluster:
+    Value: !Ref EcsCluster
+    Export:
+      Name: EcsCluster
