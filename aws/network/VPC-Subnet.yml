@@ -6,14 +6,26 @@ Parameters:
     Description: "Input VPC CIDR Block"
     Type: String
     Defaule: "10.100.0.0/22"
+
   EcsSubnetAzACidrBlock:
     Description: "Input ECS AzA subnet CIDR Block"
     Type: String
-    Defaule: "10.100.0.0/24"
+    Defaule: "10.100.0.0/26"
+
   EcsSubnetAzCCidrBlock:
     Description: "Input ECS AzC subnet CIDR Block"
     Type: String
-    Defaule: "10.100.1.0/24"
+    Defaule: "10.100.0.64/26"
+
+  AlbSubnetAzACidrBlock:
+    Description: "Input ECS AzA subnet CIDR Block"
+    Type: String
+    Defaule: "10.100.0.0/26"
+
+  AlbSubnetAzCCidrBlock:
+    Description: "Input ECS AzC subnet CIDR Block"
+    Type: String
+    Defaule: "10.100.0.64/26"
 
 Resources:
   VPC:
