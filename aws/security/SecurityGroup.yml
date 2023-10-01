@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Security Group
+
+Resources:
+  ########################################################
+  ### Security Group
+  ########################################################
+  EcsServiceSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "ecs-service-sg"
+      GroupDescription: "ECS service Security Group"
+      VpcId: !ImportValue VpcId
+      Tags:
+        - Key: Name
+          Value: "ecs-service-sg"
+      SecurityGroupIngress:
+        - Description: "HTTP access from ALB"
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref AlbSg
+
+  AlbSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "alb-sg"
+      GroupDescription: "ALB securigy group"
+      VpcId: !ImportValue VpcId
+      Tags:
+        - Key: Name
+          Value: "alb-sg"
+      SecurityGroupIngress:
+        - Description: "HTTP access from user"
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+
+  VpceSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "vpce-sg"
+      GroupDescription: "VPC Endpoint Security Group"
+      VpcId: !ImportValue VpcId
+      SecurityGroupIngress:
+        - Description: "HTTPS access from ECS"
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          SourceSecurityGroupId: !Ref EcsServiceSg
+
+Outputs:
+  EcsServiceSgId:
+    Value: !Ref EcsServiceSg
+    Export:
+      Name: EcsServiceSgId
+
+  AlbSgId:
+    Value: !Ref AlbSg
+    Export:
+      Name: AlbSgId
+
+  VpceSgId:
+    Value: !Ref VpceSg
+    Export:
+      Name: VpceSgId
