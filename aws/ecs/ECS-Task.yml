@@ -63,3 +63,8 @@ Outputs:
     Value: !Ref EcsCluster
     Export:
       Name: EcsCluster
+
+  EcsTaskDefinition:
+    Value: !Ref EcsTaskDefinition
+    Export:
+      Name: EcsTaskDefinition
