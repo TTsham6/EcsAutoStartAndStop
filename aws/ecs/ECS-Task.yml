@@ -23,7 +23,7 @@ Resources:
     Type: "AWS::ECS::TaskDefinition"
     Properties:
       Cpu: 256
-      ExecutionRoleArn: !Ref TastRole
+      ExecutionRoleArn: !GetAtt TastRole.Arn
       Family: "test-ecs-task"
       Memory: 512
       NetworkMode: awsvpc
@@ -39,6 +39,21 @@ Resources:
             - HostPort: 80
               Protocol: tcp
               ContainerPort: 80
+          LogConfiguration:
+            LogDriver: "awslogs"
+            Options:
+              awslogs-group: !Ref EcsTaskLogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: "ecs-container"
+
+  ########################################################
+  ### CloudWatch LogGropup
+  ########################################################]
+  EcsTaskLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: "ecs-task-loggroup"
+      RetentionInDays: 7
 
   ########################################################
   ### Task IAM Role
