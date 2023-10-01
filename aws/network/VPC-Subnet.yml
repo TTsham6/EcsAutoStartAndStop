@@ -5,27 +5,27 @@ Parameters:
   VpcCidrBlock:
     Description: "Input VPC CIDR Block"
     Type: String
-    Defaule: "10.100.0.0/22"
+    Default: "10.100.0.0/22"
 
   EcsSubnetAzACidrBlock:
     Description: "Input ECS AzA subnet CIDR Block"
     Type: String
-    Defaule: "10.100.0.0/26"
+    Default: "10.100.0.0/28"
 
   EcsSubnetAzCCidrBlock:
     Description: "Input ECS AzC subnet CIDR Block"
     Type: String
-    Defaule: "10.100.0.64/26"
+    Default: "10.100.0.16/28"
 
   AlbSubnetAzACidrBlock:
     Description: "Input ECS AzA subnet CIDR Block"
     Type: String
-    Defaule: "10.100.0.0/26"
+    Default: "10.100.0.32/28"
 
   AlbSubnetAzCCidrBlock:
     Description: "Input ECS AzC subnet CIDR Block"
     Type: String
-    Defaule: "10.100.0.64/26"
+    Default: "10.100.0.64/28"
 
 Resources:
   VPC:
@@ -42,7 +42,7 @@ Resources:
     Properties:
       AvailabilityZone: !Select
         - 0
-        - Fn::GetAtt: !Ref AWS::Region
+        - Fn::GetAZs: !Ref AWS::Region
       VpcId: !Ref VPC
       CidrBlock: !Ref EcsSubnetAzACidrBlock
       Tags:
@@ -54,7 +54,7 @@ Resources:
     Properties:
       AvailabilityZone: !Select
         - 1
-        - Fn::GetAtt: !Ref AWS::Region
+        - Fn::GetAZs: !Ref AWS::Region
       VpcId: !Ref VPC
       CidrBlock: !Ref EcsSubnetAzCCidrBlock
       Tags:
@@ -66,7 +66,7 @@ Resources:
     Properties:
       AvailabilityZone: !Select
         - 0
-        - Fn::GetAtt: !Ref AWS::Region
+        - Fn::GetAZs: !Ref AWS::Region
       VpcId: !Ref VPC
       CidrBlock: !Ref AlbSubnetAzACidrBlock
       Tags:
@@ -78,7 +78,7 @@ Resources:
     Properties:
       AvailabilityZone: !Select
         - 1
-        - Fn::GetAtt: !Ref AWS::Region
+        - Fn::GetAZs: !Ref AWS::Region
       VpcId: !Ref VPC
       CidrBlock: !Ref AlbSubnetAzCCidrBlock
       Tags:
