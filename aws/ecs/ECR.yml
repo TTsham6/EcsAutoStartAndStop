@@ -5,10 +5,10 @@ Resources:
   ECR:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: test-app-repository
+      RepositoryName: test-nginx-repository
 
 Outputs:
-  RpositoryUri:
-    Value: !GetAtt ECR.RpositoryUri
+  RepositoryUri:
+    Value: !GetAtt ECR.RepositoryUri
     Export:
-      Name: RpositoryUri
+      Name: RepositoryUri
