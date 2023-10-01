@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: RouteTable
+
+Resources:
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !ImportValue VpcId
+      Tags:
+        - Key: Name
+          Value: "private-route-table"
+
+  EcsAzASubentAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue EcsAzASubentId
+      RouteTableId: !Ref PrivateRouteTable
+
+  EcsAzCSubentAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue EcsAzCSubentId
+      RouteTableId: !Ref PrivateRouteTable
+
+  AlbAzASubnetAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue AlbAzASubnetId
+      RouteTableId: !Ref PrivateRouteTable
+
+  AlbAzCSubnetAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue AlbAzCSubnetId
+      RouteTableId: !Ref PrivateRouteTable
+
+  VpceAzASubnetAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue VpceAzASubnetId
+      RouteTableId: !Ref PrivateRouteTable
+
+Outputs:
+  PrivateRouteTableId:
+    Value: !Ref PrivateRouteTable
+    Export:
+      Name: PrivateRouteTableId
