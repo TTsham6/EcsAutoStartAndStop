@@ -109,4 +109,4 @@ Outputs:
   AlbAzCSubnetId:
     Value: !Ref AlbAzCSubnet
     Export:
-      Name: AlbAzASubnAlbAzCSubnetIdetId
+      Name: AlbAzCSubnetId
