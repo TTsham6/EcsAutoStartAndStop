@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "ALB"
+
+Resources:
+  ########################################################
+  ###  ALB
+  ########################################################
+
+  # ------ ALB ------
+  ALB:
+    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    Properties:
+      Name: "ecs-alb"
+      Tags:
+        - Key: Name
+          Value: "ecs-alb"
+      Scheme: "internal"
+      SecurityGroups:
+        - !ImportValue AlbSgId
+      Subnets:
+        - !ImportValue AlbAzASubnetId
+        - !ImportValue AlbAzCSubnetId
+
+  # ------ ALB Target group ------
+  AlbTargetGroup:
+    Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
+    Properties:
+      VpcId: !ImportValue VpcId
+      Name: "alb-target-group"
+      Protocol: HTTP
+      Port: 80
+      TargetType: ip
+
+  # ------ ALB Listener ------
+  AlbListener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref AlbTargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+
+Outputs:
+  ALbTargetGroup:
+    Value: !Ref AlbTargetGroup
+    Export:
+      Name: ALbTargetGroup

@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "ECS Service and ALB"
+
+Parameters:
+  DesiredCount:
+    Type: Number
+    Default: 1
+
+Resources:
+  ########################################################
+  ###  ECS Service
+  ########################################################
+  TestEcsService:
+    Type: "AWS::ECS::Service"
+    Properties:
+      Cluster: !ImportValue EcsCluster
+      DesiredCount: !Ref DesiredCount
+      LaunchType: FARGATE
+      ServiceName: "ecs-service"
+      TaskDefinition: !ImportValue EcsTaskDefinition
+      LoadBalancers:
+        - TargetGroupArn: !ImportValue ALbTargetGroup
+          ContainerPort: 80
+          ContainerName: "ecs-container"
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !ImportValue EcsServiceSgId
+          Subnets:
+            - !ImportValue EcsAzASubentId
+            - !ImportValue EcsAzCSubentId
