@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "VPC Endpoint"
+
+Resources:
+  EcrDkrVpce:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ecr.dkr"
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - !ImportValue VpceSgId
+      SubnetIds:
+        - !ImportValue VpceAzASubnetId
+      VpcEndpointType: "Interface"
+      VpcId: !ImportValue VpcId
+
+  LogsVpce:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.logs"
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - !ImportValue VpceSgId
+      SubnetIds:
+        - !ImportValue VpceAzASubnetId
+      VpcEndpointType: "Interface"
+      VpcId: !ImportValue VpcId
+
+  S3Vpce:
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcEndpointType: "Gateway"
+      VpcId: !ImportValue VpcId
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
+      RouteTableIds:
+        - !ImportValue PrivateRouteTableId
