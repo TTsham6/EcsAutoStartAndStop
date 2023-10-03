@@ -14,6 +14,18 @@ Resources:
       VpcEndpointType: "Interface"
       VpcId: !ImportValue VpcId
 
+  EcrApiVpce:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ecr.api"
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - !ImportValue VpceSgId
+      SubnetIds:
+        - !ImportValue VpceAzASubnetId
+      VpcEndpointType: "Interface"
+      VpcId: !ImportValue VpcId
+
   LogsVpce:
     Type: AWS::EC2::VPCEndpoint
     Properties:
