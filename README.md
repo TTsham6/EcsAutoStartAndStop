@@ -10,7 +10,6 @@ ECSサービスを自動起動・停止するEventBridge ScheculderのCFnテン�
 #### 自動停止の仕組み
 - EventBridge Schedulerが指定された時間になったらをUpdateService APIを実行し、タスク起動数を0に変更する。
 
-
 ## EventBridge Schedulerの作成手順
 
 ### [EventBridge.yml](eventbridge/EventBridge.yml)からスタックを作成する。
@@ -30,14 +29,17 @@ CAPABILITY_IAMを指定する
 
 ## サンプルECS作成手順
 
-### ecs-sample配下のymlから以下の順にスタックを作成する。
-1. network/VPC-Subnet.yml
-2. network/RouteTable.yml
-3. security/SecurityGroup.yml
-4. network/VpcEndpoint.yml
-5. ecs/ECR.yml
-6. ecs/ECS-Task.yml
-7. alb/ALB.yml
-8. ecs/ECS-Service.yml
+### [ECR.yml](aws/ecs-sample/ecs/ECR.yml)からECRを作成する。
+
+### docker/配下のファイルからnginxイメージを作成し、ECRにプッシュする。
+
+### ecs-sample/配下のymlから以下の順にスタックをし、ECSを起動する。
+1. [VPC-Subnet.yml](aws/ecs-sample/network/VPC-Subnet.yml)
+2. [RouteTable.yml](aws/ecs-sample/network/RouteTable.yml)
+3. [SecurityGroup.yml](aws/ecs-sample/security/SecurityGroup.yml)
+4. [VpcEndpoint.yml](aws/ecs-sample/network/VpcEndpoint.yml)
+5. [ECS-Task.yml](aws/ecs-sample/ecs/ECS-Task.yml)
+6. [ALB.yml](aws/ecs-sample/alb/ALB.yml)
+7. [ECS-Service.yml](aws/ecs-sample/ecs/ECS-Service.yml)
 
 
