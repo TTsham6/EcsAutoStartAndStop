@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Event Bridge ECS Fargate auto start and stop"
+
+Parameters:
+  StartServiceCron:
+    Description: "Cron expression for start service"
+    Type: String
+    Default: "cron(0 8 ? * MON-FRI *)"
+
+  StopServiceCron:
+    Description: "Cron expression for start service"
+    Type: String
+    Default: "cron(0 22 ? * MON-FRI *)"
+
+  ClusterName:
+    Description: "Input ECS Cluster name"
+    Type: String
+    Default: "test-app-claster"
+
+  ServiceName:
+    Description: "Input ECS Service name"
+    Type: String
+    Default: "ecs-service"
+
+Resources:
+  ########################################################
+  ### Start Scheduler
+  ########################################################
+  StartScheduler:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: "ecs-start-schedule"
+      Description: "ECS fargate auto start scheduler"
+      State: "ENABLED"
+      ScheduleExpression: !Ref StartServiceCron
+      ScheduleExpressionTimezone: "Japan"
+      FlexibleTimeWindow:
+        Mode: "OFF"
+      Target:
+        Arn: arn:aws:scheduler:::aws-sdk:ecs:updateService
+        RoleArn: !GetAtt SchedulerRole.Arn
+        Input: !Sub |
+          {
+            "Cluster": "${ClusterName}",
+            "Service": "${ServiceName}",
+            "DesiredCount": 1
+          }
+
+  ########################################################
+  ### Stop Scheduler
+  ########################################################
+  StopScheduler:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: "ecs-stop-schedule"
+      Description: "ECS fargate auto stop scheduler"
+      State: "ENABLED"
+      ScheduleExpression: !Ref StopServiceCron
+      ScheduleExpressionTimezone: "Japan"
+      FlexibleTimeWindow:
+        Mode: "OFF"
+      Target:
+        Arn: arn:aws:scheduler:::aws-sdk:ecs:updateService
+        RoleArn: !GetAtt SchedulerRole.Arn
+        Input: !Sub |
+          {
+            "Cluster": "${ClusterName}",
+            "Service": "${ServiceName}",
+            "DesiredCount": 0
+          }
+
+  ########################################################
+  ### IAM Role
+  ########################################################
+  SchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "scheduler.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
