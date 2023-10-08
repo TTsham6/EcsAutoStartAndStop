@@ -24,8 +24,8 @@ Parameters:
 
   DesiredCount:
     Description: "Number of ECS tasks at startup"
-    Type: String
-    Default: "2"
+    Type: Number
+    Default: 2
 
 Resources:
   ########################################################
