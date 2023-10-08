@@ -22,6 +22,11 @@ Parameters:
     Type: String
     Default: "ecs-service"
 
+  DesiredCount:
+    Description: "Number of ECS tasks at startup"
+    Type: String
+    Default: "2"
+
 Resources:
   ########################################################
   ### Start Scheduler
@@ -43,7 +48,7 @@ Resources:
           {
             "Cluster": "${ClusterName}",
             "Service": "${ServiceName}",
-            "DesiredCount": 1
+            "DesiredCount": "${DesiredCount}"
           }
 
   ########################################################
